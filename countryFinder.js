@@ -3,17 +3,18 @@ var app = express();
 var fs = require('fs');
 var parser = require('body-parser');
 var hbs = require('hbs');
+var svg = require('svg');
 
 
 // code from Templates powerpoint
-hbs.registerPartial('item', fs.readFileSync('./views/item.hbs', 'utf-8'));
-app.set('view engine', 'hbs');
+// hbs.registerPartial('item', fs.readFileSync('./views/item.hbs', 'utf-8'));
+// app.set('view engine', 'hbs');
 
 // code from Hou's theme-6-portfolio index.js 
-app.use(express.static(__dirname));
-app.get('/', function(request, response){
-  response.render('countryFinder');
-});
+// app.use(express.static(__dirname));
+// app.get('/', function(request, response){
+//   response.render('countryFinder');
+// });
 
 // var countryToFind = process.argv[2];
 
@@ -58,17 +59,20 @@ app.get('/country/:ABC', function(request, response) {
 			var countryIndex = countryKeys[i][0];
 			if (countryCode === countryIndex) {
 				var country = {
-					'Name': `Name: ${countryKeys[i][1].name}`
+					'name': `${countryKeys[i][1].name}`,
+					'native': `${countryKeys[i][1].nativeName}`,
+					'pop': `${countryKeys[i][1].population}`,
+					'region': `${countryKeys[i][1].region}`,
+					'flag': `${countryKeys[i][1].flag}`
 				}
-				console.log(`${country.Name}`)
-				// console.log(
-				// 	`Name: ${countryKeys[i][1].name}\n
-				// 	Native Name: ${countryKeys[i][1].nativeName}\n
-				// 	Population: ${countryKeys[i][1].population}\n
-				// 	Region: ${countryKeys[i][1].region}\n
-				// 	Flag: ${countryKeys[i][1].flag}\n
-				// 	`);
-				return response.send(`${country.Name}`);
+				
+				response.send(`
+					English Name: ${country.name}\n
+					Native Name: ${country.native}\n
+					Population: ${country.pop}\n
+					Region: ${country.region}\n
+					`);
+				return response.render(`${country.flag}`);
 			}
 			
 		}	
