@@ -15,28 +15,71 @@ app.get('/', function(request, response){
   response.render('countryFinder');
 });
 
-var countryToFind = process.argv[2];
+// var countryToFind = process.argv[2];
 
 var readJSONFile = require('./lib/json-file-reader');
 
-readJSONFile('./files/countries.json', function(parsedCountries) {
+
+// readJSONFile('./files/countries.json', function(parsedCountries) {
 	
-	countryKeys = Object.entries(parsedCountries);
-	// running Object.entries() in node returns an error stating its not a function
-	// so in CLI, type node --harmony for function to work
+// 	countryKeys = Object.entries(parsedCountries);
+// 	// running Object.entries() in node returns an error stating its not a function
+// 	// so in CLI, type node --harmony for function to work
 	
-	for (var i = 0; i < countryKeys.length; i++) {
-		country = countryKeys[i][0];
-		if (countryToFind === country) {
-			return console.log(
-				`Name: ${countryKeys[i][1].name}\n
-				Native Name: ${countryKeys[i][1].nativeName}\n
-				Population: ${countryKeys[i][1].population}\n
-				Region: ${countryKeys[i][1].region}\n
-				Flag: ${countryKeys[i][1].flag}\n
-				`);
-		}
-	}
+// 	for (var i = 0; i < countryKeys.length; i++) {
+// 		country = countryKeys[i][0];
+// 		if (countryToFind === country) {
+// 			console.log(
+// 				`Name: ${countryKeys[i][1].name}\n
+// 				Native Name: ${countryKeys[i][1].nativeName}\n
+// 				Population: ${countryKeys[i][1].population}\n
+// 				Region: ${countryKeys[i][1].region}\n
+// 				Flag: ${countryKeys[i][1].flag}\n
+// 				`);
+// 		}
+// 	}	
+// });
+
+
+// newCountry();
+
+
+// next step:
+
+app.get('/country/:ABC', function(request, response) {
+	var countryCode = request.params.ABC;
+	readJSONFile('./files/countries.json', function(parsedCountries) {
+	
+		var countryKeys = Object.entries(parsedCountries);
+		// running Object.entries() in node returns an error stating its not a function
+		// so in CLI, type node --harmony for function to work
+		
+		for (var i = 0; i < countryKeys.length; i++) {
+			var countryIndex = countryKeys[i][0];
+			if (countryCode === countryIndex) {
+				var country = {
+					'Name': `Name: ${countryKeys[i][1].name}`
+				}
+				console.log(`${country.Name}`)
+				// console.log(
+				// 	`Name: ${countryKeys[i][1].name}\n
+				// 	Native Name: ${countryKeys[i][1].nativeName}\n
+				// 	Population: ${countryKeys[i][1].population}\n
+				// 	Region: ${countryKeys[i][1].region}\n
+				// 	Flag: ${countryKeys[i][1].flag}\n
+				// 	`);
+				return response.send(`${country.Name}`);
+			}
+			
+		}	
+		
+	});
+	// var country = {
+	// 	'YEM': 'Yemen',
+	// 	'ZMB': 'Zambia'
+	// }; // can put this var outside of function
+
+	
 });
 
 app.get('*', function(request, response) {
@@ -44,9 +87,8 @@ app.get('*', function(request, response) {
 });
 
 app.listen(3001, function() {
-	console.log('example app is listening on port 3000');
+	console.log('example app is listening on port 3001 ');
 });
-
 
 
 // Assignment___________________________________________________________________________
